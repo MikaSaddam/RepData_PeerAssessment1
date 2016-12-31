@@ -85,7 +85,10 @@ hist(ds$steps)
 
 Sum and report the mean and median total number of steps taken per day.
 ```{r}
-c(mean=mean(ds$steps), median=median(ds$steps))
+
+paste("Mean = ", mean(ds$steps))
+paste("Median = ", median(ds$steps))
+
 ```
 
 Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
@@ -96,7 +99,7 @@ Do these values differ from the estimates from the first part of the assignment?
 
 ```{r}
 is.weekday <- function(x){
-    ifelse(weekdays(as.Date(x)) == "Saturday" | weekdays(as.Date(x)) == "Sunday", "weekend", "weekday")
+    ifelse(weekdays(as.Date(x)) == "Saturday" | weekdays(as.Date(x)) == "Sunday", "Weekend", "Weekday")
 }
 
 activity_clone$hari <- weekdays(as.Date(activity_clone$date))
@@ -108,3 +111,15 @@ head(activity_clone)
 ```
 
 2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). The plot should look something like the following, which was creating using simulated data:
+
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
+
+ds <- aggregate(activity_clone, by = list(activity_clone$interval, activity_clone$day), FUN=mean, na.rm=TRUE)
+
+ggplot(ds, aes(x=Group.1, y=steps)) + 
+  geom_line() +
+  facet_grid(Group.2 ~ .) +
+  xlab("Interval") +
+  ggtitle("Time Series Graph Plot")
+```

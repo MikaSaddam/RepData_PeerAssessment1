@@ -137,12 +137,19 @@ hist(ds$steps)
 Sum and report the mean and median total number of steps taken per day.
 
 ```r
-c(mean=mean(ds$steps), median=median(ds$steps))
+paste("Mean = ", mean(ds$steps))
 ```
 
 ```
-##     mean   median 
-## 10766.19 10766.19
+## [1] "Mean =  10766.1886792453"
+```
+
+```r
+paste("Median = ", median(ds$steps))
+```
+
+```
+## [1] "Median =  10766.1886792453"
 ```
 
 Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
@@ -154,7 +161,7 @@ Do these values differ from the estimates from the first part of the assignment?
 
 ```r
 is.weekday <- function(x){
-    ifelse(weekdays(as.Date(x)) == "Saturday" | weekdays(as.Date(x)) == "Sunday", "weekend", "weekday")
+    ifelse(weekdays(as.Date(x)) == "Saturday" | weekdays(as.Date(x)) == "Sunday", "Weekend", "Weekday")
 }
 
 activity_clone$hari <- weekdays(as.Date(activity_clone$date))
@@ -167,12 +174,27 @@ head(activity_clone)
 
 ```
 ##       steps       date interval   hari     day
-## 1 1.7169811 2012-10-01        0 Monday weekday
-## 2 0.3396226 2012-10-01        5 Monday weekday
-## 3 0.1320755 2012-10-01       10 Monday weekday
-## 4 0.1509434 2012-10-01       15 Monday weekday
-## 5 0.0754717 2012-10-01       20 Monday weekday
-## 6 2.0943396 2012-10-01       25 Monday weekday
+## 1 1.7169811 2012-10-01        0 Monday Weekday
+## 2 0.3396226 2012-10-01        5 Monday Weekday
+## 3 0.1320755 2012-10-01       10 Monday Weekday
+## 4 0.1509434 2012-10-01       15 Monday Weekday
+## 5 0.0754717 2012-10-01       20 Monday Weekday
+## 6 2.0943396 2012-10-01       25 Monday Weekday
 ```
 
 2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). The plot should look something like the following, which was creating using simulated data:
+
+
+```r
+library(ggplot2)
+
+ds <- aggregate(activity_clone, by = list(activity_clone$interval, activity_clone$day), FUN=mean, na.rm=TRUE)
+
+ggplot(ds, aes(x=Group.1, y=steps)) + 
+  geom_line() +
+  facet_grid(Group.2 ~ .) +
+  xlab("Interval") +
+  ggtitle("Time Series Graph Plot")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
